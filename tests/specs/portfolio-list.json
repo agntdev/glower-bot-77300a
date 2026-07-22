@@ -1,19 +1,66 @@
 [
   {
-    "name": "View Portfolio",
+    "name": "View Portfolio — empty state",
     "steps": [
       {
+        "send": { "callback": "portfolio:list" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Browse portfolio items by service category"
+              "text": "No portfolio items yet — check back soon!"
             }
           }
-        ],
-        "send": {
-          "callback": "portfolio:list"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "View Portfolio — shows items after admin adds one",
+    "steps": [
+      {
+        "send": { "text": "/admin" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "⚙️ Admin panel" } }]
+      },
+      {
+        "send": { "callback": "admin:add_service" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "What's the service name?" } }]
+      },
+      {
+        "send": { "text": "Nail Art" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "How long is this service in minutes? (e.g. 60)" } }]
+      },
+      {
+        "send": { "text": "45" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "What's the price label? (e.g. $50)" } }]
+      },
+      {
+        "send": { "text": "$30" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Describe the service:" } }]
+      },
+      {
+        "send": { "text": "Custom nail art designs" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "✅ Service added!\n\nName: Nail Art\nDuration: 45 min\nPrice: $30\nDescription: Custom nail art designs" } }]
+      },
+      {
+        "send": { "callback": "admin:add_portfolio" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Which service is this portfolio item for?" } }]
+      },
+      {
+        "send": { "callback": "admin:set_portfolio_tag:Nail Art" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Add a caption for this portfolio item:" } }]
+      },
+      {
+        "send": { "text": "Floral nail design" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "✅ Portfolio item added!\n\nService: Nail Art\nCaption: Floral nail design" } }]
+      },
+      {
+        "send": { "callback": "portfolio:list" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "🖼️ Browse our work — pick a category:" } }]
+      },
+      {
+        "send": { "callback": "portfolio:filter:all" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "That's all for now!" } }]
       }
     ]
   }

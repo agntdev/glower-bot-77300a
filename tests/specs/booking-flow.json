@@ -1,0 +1,173 @@
+[
+  {
+    "name": "Full booking flow — service to confirmation",
+    "steps": [
+      {
+        "send": { "text": "/admin" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "⚙️ Admin panel" } }]
+      },
+      {
+        "send": { "callback": "admin:add_service" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "What's the service name?" } }]
+      },
+      {
+        "send": { "text": "Gel Manicure" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "How long is this service in minutes? (e.g. 60)" } }]
+      },
+      {
+        "send": { "text": "60" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "What's the price label? (e.g. $50)" } }]
+      },
+      {
+        "send": { "text": "$45" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Describe the service:" } }]
+      },
+      {
+        "send": { "text": "Classic gel manicure" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "✅ Service added!\n\nName: Gel Manicure\nDuration: 60 min\nPrice: $45\nDescription: Classic gel manicure" } }]
+      },
+      {
+        "send": { "callback": "booking:services" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Pick a service to book:" } }]
+      },
+      {
+        "send": { "callback": "booking:pick:1" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "📅 When would you like your Gel Manicure?" } }]
+      },
+      {
+        "send": { "callback": "booking:date:2026-07-22" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "⏰ Pick a time on Wednesday, July 22:" } }]
+      },
+      {
+        "send": { "callback": "booking:slot:10:00" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "What's your name?" } }]
+      },
+      {
+        "send": { "text": "Jane Smith" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "What's your phone number?" } }]
+      },
+      {
+        "send": { "text": "+1-555-0123" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "📋 Confirm your booking:\n\nService: Gel Manicure\nDate: Wednesday, July 22\nTime: 10:00\nName: Jane Smith\nPhone: +1-555-0123\n\nDoes everything look right?" } }]
+      },
+      {
+        "send": { "callback": "booking:confirm:yes" },
+        "expect": [{ "method": "editMessageText", "payload": { "text": "✅ You're booked!\n\nService: Gel Manicure\nDate: Wednesday, July 22\nTime: 10:00\nName: Jane Smith\n\nSee you at the studio!" } }]
+      }
+    ]
+  },
+  {
+    "name": "Full booking flow — cancel before confirm",
+    "steps": [
+      {
+        "send": { "text": "/admin" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "⚙️ Admin panel" } }]
+      },
+      {
+        "send": { "callback": "admin:add_service" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "What's the service name?" } }]
+      },
+      {
+        "send": { "text": "Pedicure" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "How long is this service in minutes? (e.g. 60)" } }]
+      },
+      {
+        "send": { "text": "45" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "What's the price label? (e.g. $50)" } }]
+      },
+      {
+        "send": { "text": "$35" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Describe the service:" } }]
+      },
+      {
+        "send": { "text": "Relaxing pedicure" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "✅ Service added!\n\nName: Pedicure\nDuration: 45 min\nPrice: $35\nDescription: Relaxing pedicure" } }]
+      },
+      {
+        "send": { "callback": "booking:services" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Pick a service to book:" } }]
+      },
+      {
+        "send": { "callback": "booking:pick:1" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "📅 When would you like your Pedicure?" } }]
+      },
+      {
+        "send": { "callback": "booking:date:2026-07-22" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "⏰ Pick a time on Wednesday, July 22:" } }]
+      },
+      {
+        "send": { "callback": "booking:slot:11:00" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "What's your name?" } }]
+      },
+      {
+        "send": { "text": "John Doe" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "What's your phone number?" } }]
+      },
+      {
+        "send": { "text": "+1-555-0456" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "📋 Confirm your booking:\n\nService: Pedicure\nDate: Wednesday, July 22\nTime: 11:00\nName: John Doe\nPhone: +1-555-0456\n\nDoes everything look right?" } }]
+      },
+      {
+        "send": { "callback": "booking:confirm:no" },
+        "expect": [{ "method": "editMessageText", "payload": { "text": "Booking cancelled. Tap /start to begin again." } }]
+      }
+    ]
+  },
+  {
+    "name": "Slot unavailability — taken slot not shown",
+    "steps": [
+      {
+        "send": { "text": "/admin" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "⚙️ Admin panel" } }]
+      },
+      {
+        "send": { "callback": "admin:add_service" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "What's the service name?" } }]
+      },
+      {
+        "send": { "text": "Massage" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "How long is this service in minutes? (e.g. 60)" } }]
+      },
+      {
+        "send": { "text": "60" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "What's the price label? (e.g. $50)" } }]
+      },
+      {
+        "send": { "text": "$70" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Describe the service:" } }]
+      },
+      {
+        "send": { "text": "Full body massage" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "✅ Service added!\n\nName: Massage\nDuration: 60 min\nPrice: $70\nDescription: Full body massage" } }]
+      },
+      {
+        "send": { "callback": "booking:services" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Pick a service to book:" } }]
+      },
+      {
+        "send": { "callback": "booking:pick:1" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "📅 When would you like your Massage?" } }]
+      },
+      {
+        "send": { "callback": "booking:date:2026-07-22" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "⏰ Pick a time on Wednesday, July 22:" } }]
+      },
+      {
+        "send": { "callback": "booking:slot:09:00" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "What's your name?" } }]
+      },
+      {
+        "send": { "text": "Alice" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "What's your phone number?" } }]
+      },
+      {
+        "send": { "text": "+1-555-0789" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "📋 Confirm your booking:\n\nService: Massage\nDate: Wednesday, July 22\nTime: 09:00\nName: Alice\nPhone: +1-555-0789\n\nDoes everything look right?" } }]
+      },
+      {
+        "send": { "callback": "booking:confirm:yes" },
+        "expect": [{ "method": "editMessageText", "payload": { "text": "✅ You're booked!\n\nService: Massage\nDate: Wednesday, July 22\nTime: 09:00\nName: Alice\n\nSee you at the studio!" } }]
+      }
+    ]
+  }
+]

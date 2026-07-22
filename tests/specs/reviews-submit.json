@@ -1,19 +1,59 @@
 [
   {
-    "name": "Leave Review",
+    "name": "Leave Review — starts rating flow",
     "steps": [
       {
+        "send": { "callback": "reviews:submit" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Submit post-appointment review with rating and photos"
+              "text": "How would you rate your experience?\n\nTap a star to rate:"
             }
           }
-        ],
-        "send": {
-          "callback": "reviews:submit"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Leave Review — full flow with rating and text",
+    "steps": [
+      {
+        "send": { "callback": "reviews:submit" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "How would you rate your experience?\n\nTap a star to rate:" } }]
+      },
+      {
+        "send": { "callback": "review:rate:5" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Thanks! Tell us about your experience." } }]
+      },
+      {
+        "send": { "text": "Amazing service! The gel manicure lasted two full weeks." },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "📋 Review preview:\n\nRating: ⭐⭐⭐⭐⭐\nReview: Amazing service! The gel manicure lasted two full weeks.\n\nSubmit this review?" } }]
+      },
+      {
+        "send": { "callback": "review:submit:yes" },
+        "expect": [{ "method": "editMessageText", "payload": { "text": "✅ Review submitted! Thanks for your feedback.\n\nRating: ⭐⭐⭐⭐⭐\nReview: Amazing service! The gel manicure lasted two full weeks." } }]
+      }
+    ]
+  },
+  {
+    "name": "Leave Review — user can cancel",
+    "steps": [
+      {
+        "send": { "callback": "reviews:submit" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "How would you rate your experience?\n\nTap a star to rate:" } }]
+      },
+      {
+        "send": { "callback": "review:rate:4" },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "Thanks! Tell us about your experience." } }]
+      },
+      {
+        "send": { "text": "Pretty good overall." },
+        "expect": [{ "method": "sendMessage", "payload": { "text": "📋 Review preview:\n\nRating: ⭐⭐⭐⭐\nReview: Pretty good overall.\n\nSubmit this review?" } }]
+      },
+      {
+        "send": { "callback": "review:submit:no" },
+        "expect": [{ "method": "editMessageText", "payload": { "text": "Review discarded. Tap /start to begin again." } }]
       }
     ]
   }
